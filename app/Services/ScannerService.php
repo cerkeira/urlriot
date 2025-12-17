@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
 
 class ScannerService
 {
@@ -22,7 +24,7 @@ class ScannerService
     ];
 }
 
-
+// api requests
     private function checkGoogle(string $url): array
     {
         $apiKey = env('GOOGLE_KEY');
@@ -46,15 +48,20 @@ class ScannerService
             ],
         ];
 
-        $response = Http::post(
+        $response = Http::timeout(10)
+        ->post(
             "https://safebrowsing.googleapis.com/v4/threatMatches:find?key={$apiKey}",
             $payload
-        );
+        )
+        ->throw();
 
         return $response->json() ?? [];
-        } catch  (\Exception $e) {
+        } catch  (RequestException $e) {
             return ['error' => 'Google Safe Browsing failed'];
-        }
+        } catch (ConnectionException $e) {
+    return ['error' => 'Service timeout'];
+}
+
     }
 
     private function checkVirusTotal(string $url): array
@@ -66,11 +73,15 @@ class ScannerService
         }
 
         try {
-            $response = Http::get("https://www.virustotal.com/vtapi/v2/url/report?apikey={$apiKey}&resource={$url}&scan=1");
+            $response = Http::timeout(10)
+        ->get("https://www.virustotal.com/vtapi/v2/url/report?apikey={$apiKey}&resource={$url}&scan=1")
+        ->throw();
             return $response->json() ?? [];
-        } catch (\Exception $e) {
+        } catch (RequestException $e) {
             return ['error' => 'Virus Total failed'];
-        }
+        } catch (ConnectionException $e) {
+    return ['error' => 'Service timeout'];
+}
     }
     
      private function checkDna(string $url): array
@@ -86,19 +97,24 @@ class ScannerService
             "url"=> $url
         ];
 
-        $response =  Http::withHeaders([
+        $response =  Http::timeout(10)
+        ->withHeaders([
             'Authorization' => "Bearer $apiKey"
         ])->post(
             "https://api.urldna.io/fast-check",
             $payload
-        );
+        )
+        ->throw();
 
         return $response->json() ?? [];
-        } catch  (\Exception $e) {
+        } catch  (RequestException $e) {
             return ['error' => 'urlDNA Browsing failed'];
-        }
-    }
+        } catch (ConnectionException $e) {
+    return ['error' => 'Service timeout'];
+}
 
+    }
+// normalization of results
     private function normalizeGoogle(array $response): array
 {
     if (!empty($response['matches'])) {
@@ -185,13 +201,13 @@ private function normalizeUrlDna(array $response): array
         ],
     };
 }
-
+// weight of each provider for final rating
 private array $providerWeights = [
     'Google Safe Browsing' => 3,  // very strong signal
     'VirusTotal'          => 2,  // aggregate engine
     'urlDNA'              => 3,  // heuristic
 ];
-
+// scoring system
 private function verdictToScore(?bool $safe): int
 {
     return match ($safe) {
@@ -203,9 +219,9 @@ private function verdictToScore(?bool $safe): int
 
 private function mapScoreToRating(int $score, int $maxScore): array
 {
-    // Normalize score to range [-1, 1]
+    // normalize score to range [-1, 1]
     $normalized = $maxScore > 0 ? $score / ($maxScore * 2) : 0;
-
+// translate score to rating
     return match (true) {
         $normalized <= -0.6 => ['rating' => 1, 'label' => 'Very unsafe'],
         $normalized <= -0.2 => ['rating' => 2, 'label' => 'Unsafe'],
@@ -214,7 +230,7 @@ private function mapScoreToRating(int $score, int $maxScore): array
         default             => ['rating' => 5, 'label' => 'Safe'],
     };
 }
-
+// final result computation
 private function computeSafenessRating(array $results): array
 {
     $score = 0;

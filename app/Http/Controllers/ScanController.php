@@ -11,7 +11,7 @@ class ScanController extends Controller
     {
         return view('home');
     }
-
+// normalize urls to ensure they start with http:// or https://
     public function check(Request $request, ScannerService $scanner)
     {
            $url = trim($request->input('url'));
