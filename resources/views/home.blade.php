@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>URLRiot</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="/icon.png"/>
+    <link rel="icon" href="/icon.ico"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
@@ -15,16 +17,16 @@
 </head>
 <body class="bg-gray-100 text-gray-900">
 
-<div class="max-w-xl mx-auto mt-20 p-6 bg-white shadow rounded">
-    <h1 class="text-2xl font-bold mb-4">URLRiot</h1>
+<div class="max-w-xl mx-auto mt-20 p-6 bg-white shadow rounded-lg">
+    <a href="/"><img src="/logo.svg" alt="URLRiot Logo" class=" w-72 my-2 mb-8 mx-auto"></a>
 
-    <form action="{{ route('check') }}" method="POST" class="mb-6">
+    <form action="{{ route('check') }}" method="POST" class="mb-5">
         @csrf
         <input
             type="text"
             name="url"
             placeholder="Paste a URL..."
-            class="w-full p-3 border rounded"
+            class="w-full p-3 border focus:outline-none focus:outline-amber-500 focus:outline-2 rounded-full"
             value="{{ old('url', $inputUrl ?? '') }}"
             required
         >
@@ -32,11 +34,7 @@
             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
         @enderror
 
-        <button
-            class="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
-            Check URL
-        </button>
+<button  data-width="full" class="w-full mt-3 group relative inline-flex h-14 items-center justify-center rounded-full bg-neutral-50 py-1 pl-6 pr-14 font-medium text-black"><span class="z-10 pr-2">Check URL</span><div class="absolute right-1 inline-flex h-12 w-12 items-center justify-end rounded-full bg-amber-300 transition-[width] group-hover:w-[calc(100%-8px)]"><div class="mr-3.5 flex items-center justify-center"><svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-neutral-950"><path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"></path></svg></div></div></button>
     </form>
 
     @isset($results)
@@ -80,7 +78,7 @@
                         <button class="ms-auto text-sm font-medium text-fg-brand hover:underline toggle-details transition-all duration-200 ease-in-out text-gray" data-target="details-{{ $loop->index }}">See detailed results</button>
         </div>
                                     <div id="details-{{ $loop->index }}" class="p-4 border rounded my-2 bg-lightgray hidden">
-        <pre class="text-sm whitespace-pre-wrap overflow-x-scroll">{{ json_encode($result, JSON_PRETTY_PRINT) }}</pre>
+        <pre class="text-sm whitespace-pre-wrap overflow-scroll max-h-96">{{ json_encode($result, JSON_PRETTY_PRINT) }}</pre>
     </div>
                 </div>
             @endforeach
