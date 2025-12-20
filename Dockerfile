@@ -26,6 +26,6 @@ RUN npm install && npm run build
 # Laravel permissions
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-EXPOSE 9000
+EXPOSE 10000
 
-CMD ["php-fpm"]
+CMD php -S 0.0.0.0:10000 -t public
