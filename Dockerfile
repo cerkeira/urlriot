@@ -22,6 +22,13 @@ RUN chmod -R 775 storage bootstrap/cache
 # Install PHP deps
 RUN composer install --no-dev --optimize-autoloader
 
+# Clear Laravel caches
+RUN php artisan config:clear \
+    && php artisan cache:clear \
+    && php artisan route:clear \
+    && php artisan view:clear
+
+
 # Build frontend
 RUN npm install && npm run build
 
