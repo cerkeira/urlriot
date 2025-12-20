@@ -31,5 +31,8 @@ RUN mkdir -p storage/framework/cache/data \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
+# Remove any cached Laravel config/views/routes
+RUN rm -f bootstrap/cache/*.php
+
 # 9. Start Laravel using Render's assigned port
 CMD php -S 0.0.0.0:${PORT:-10000} -t public public/index.php
