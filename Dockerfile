@@ -35,4 +35,4 @@ RUN mkdir -p storage/framework/cache/data \
 RUN rm -f bootstrap/cache/*.php
 
 # 9. Start Laravel using Render's assigned port
-CMD php -S 0.0.0.0:${PORT:-10000} -t public public/index.php
+CMD php -S 0.0.0.0:${PORT:-10000} -t public
