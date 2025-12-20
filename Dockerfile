@@ -22,6 +22,9 @@ RUN chmod -R 775 storage bootstrap/cache
 RUN touch database/database.sqlite \
     && chown www-data:www-data database/database.sqlite \
     && chmod 664 database/database.sqlite
+# Run migrations
+RUN php artisan cache:table \
+    && php artisan migrate
 
 # Ensure Laravel storage directories exist and are writable
 RUN mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views \
