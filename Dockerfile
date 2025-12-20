@@ -30,4 +30,4 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 
 EXPOSE 10000
 
-CMD php -S 0.0.0.0:10000 -t public
+CMD php -S 0.0.0.0:10000 -t public public/index.php
