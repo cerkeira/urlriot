@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>URLRiot</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/png" href="/icon.png"/>
-    <link rel="icon" href="/icon.ico"/>
+    <link rel="icon" type="image/png" href="{{ asset('icon.png') }}"/>
+    <link rel="icon" href="{{ asset('icon.ico') }}"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
 <body class="bg-gray-100 text-gray-900">
 
 <div class="max-w-xl mx-auto mt-20 p-6 bg-white shadow rounded-lg mb-3">
-    <a href="/"><img src="/logo.svg" alt="URLRiot Logo" class=" w-72 my-2 mb-3 mx-auto"></a>
+    <a href="/"><img src="{{ asset('logo.svg') }}" alt="URLRiot Logo" class=" w-72 my-2 mb-3 mx-auto"></a>
     <p class="text-center mb-7 font-semibold text-gray-800 w-96 mx-auto">A simple, fast, multi-engine URL safety checker.</p>
 
     <form action="{{ route('check') }}" method="POST" class="mb-5">
@@ -147,7 +147,7 @@
     <!-- responsability disclaimer and credits -->
     <p class="text-sm text-neutral-500 text-center mt-6">This tool is not a substitute for professional security analysis.
     Results depend entirely on third-party services and should be treated as advisory only.</p>
-    <p class="text-sm text-neutral-700 text-center mt-2">✨ Made by <a href="https://github.com/cerkeira" class="underline hover:text-amber-300">cerkeira<img src="/github-mark.svg" alt="GitHub" class="w-4 h-4 inline ml-1"></a> ✨</p>
+    <p class="text-sm text-neutral-700 text-center mt-2">✨ Made by <a href="https://github.com/cerkeira" class="underline hover:text-amber-300">cerkeira<img src="{{ asset('github-mark.svg') }}" alt="GitHub" class="w-4 h-4 inline ml-1"></a> ✨</p>
 </div>
 
 </body>
