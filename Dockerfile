@@ -18,16 +18,12 @@ WORKDIR /var/www/html
 COPY . .
 RUN chmod -R 775 storage bootstrap/cache
 
+RUN mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views \
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
 # Install PHP deps
 RUN composer install --no-dev --optimize-autoloader
-
-# Clear Laravel caches
-RUN php artisan config:clear \
-    && php artisan cache:clear \
-    && php artisan route:clear \
-    && php artisan view:clear
-
 
 # Build frontend
 RUN npm install && npm run build
