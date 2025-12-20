@@ -16,6 +16,8 @@ WORKDIR /var/www/html
 
 # Copy project
 COPY . .
+RUN chmod -R 775 storage bootstrap/cache
+
 
 # Install PHP deps
 RUN composer install --no-dev --optimize-autoloader
